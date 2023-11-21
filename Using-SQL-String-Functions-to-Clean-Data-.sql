@@ -189,16 +189,25 @@ SELECT * FROM customers;
 
 -- 7.2: Retrieve the IDs, names, and groups of customers
 -- Hint: Use the customer_id column
-
+SELECT customer_id, customer_name,
+SUBSTRING(customer_id FOR 2) AS cust_group
+FROM customers;
 
 -- 7.3: Retrieve the IDs, names of customers in the customer group 'AB'
-
+SELECT customer_id, customer_name,
+SUBSTRING(customer_id FOR 2) AS cust_group
+FROM customers
+WHERE SUBSTRING(customer_id FOR 2) = 'AB';
 
 -- 7.4: Retrieve the IDs, names, and customer number of customers in the customer group 'AB'
-
+SELECT customer_id, customer_name,
+SUBSTRING(customer_id FROM 4 FOR 5) AS cust_group
+FROM customers
+WHERE SUBSTRING(customer_id FOR 2) = 'AB';
 
 -- 7.5: Retrieve the year of birth for all employees
-
+SELECT emp_no, birth_date, SUBSTRING(CAST(birth_date AS CHAR(10)) FOR 4) AS year
+FROM employees;
 
 #############################
 -- Task Eight: String Aggregation
@@ -210,13 +219,18 @@ SELECT * FROM customers;
 SELECT * FROM dept_emp;
 
 -- 8.2: Retrieve a list of all department numbers for different employees
-
+SELECT emp_no, STRING_AGG(dept_no, ', ') AS departments
+FROM dept_emp
+GROUP BY emp_no;
 
 -- 8.3: Retrieve data from the sales table
 SELECT * FROM sales;
 
 -- 8.4: Retrieve a list of all products that were ordered by a customer from the sales table
-
+SELECT order_id, STRING_AGG(product_id, ', ') AS pro_ordered
+FROM sales
+GROUP BY order_id
+ORDER BY order_id;
 
 #############################
 -- Task Nine: COALESCE
@@ -228,7 +242,10 @@ SELECT * FROM sales;
 SELECT * FROM departments_dup;
 
 -- 9.2: Replace all missing department number with its department name
-
+SELECT dept_no, dept_name,
+COALESCE(dept_no, dept_name) AS dept
+FROM departments_dup
+ORDER BY dept_no;
 
 -- 9.3: Change every missing department number to 'No Department Number' and
 -- every missing department name to 'No Department Name' respectively
@@ -241,4 +258,6 @@ ORDER BY dept_no;
 -- 9.4: Replace a missing country with the city, state or No Address
 SELECT * FROM customers;
 
-
+SELECT customer_name, country, city, state,
+COALESCE(country, city, state, 'No Address') AS cust_add
+FROM customers;
