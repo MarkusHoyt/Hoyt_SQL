@@ -1,13 +1,12 @@
 ###############################################################
 ###############################################################
--- Guided Project: Using SQL String Functions to Clean Data
+-- Using SQL String Functions to Clean Data
 ###############################################################
 ###############################################################
  
 
 #############################
--- Task One: Introduction
--- In this task, we will create new tables; the customers
+-- create new tables; the customers
 -- and sales tables in the database
 #############################
 
@@ -43,8 +42,8 @@ CREATE TABLE sales
 );
 
 -- 1.3: Retrieve data from the customers and sales tables
-
-
+SELECT * FROM customers;
+SELECT * FROM sales;
 #############################
 -- Task Two: LENGTH, LEFT, RIGHT
 -- In this task, we will use the LENGTH function to return the 
@@ -57,24 +56,31 @@ CREATE TABLE sales
 SELECT * FROM employees;
 
 -- 2.2: Find the length of the first name of male employees
-
+SELECT first_name, LENGTH(first_name) AS character_num
+FROM employees
+WHERE gender = 'M';
 
 -- 2.3: Find the length of the first name of male employees
 -- where the length of the first name is greater than 5
+SELECT first_name, LENGTH(first_name) AS character_num
+FROM employees
+WHERE gender = 'M' AND LENGTH(first_name) > 5
+ORDER BY character_num;
 
 -- 2.4: Retrieve a list of the customer group of all customers
-
+SELECT * FROM customers;
 
 -- 2.5: Retrieve a list of the customer number of all customers
-
+SELECT customer_id, RIGHT (customer_id, 2) AS cust_number
+FROM customers;
 
 -- 2.6: Retrieve the length of the customer_id column
 SELECT customer_id, LENGTH(customer_id)
 FROM customers;
 
 -- 2.7: Retrieve a list of the customer group of all customers
-
-
+SELECT customer_id, RIGHT(customer_id, LENGTH(customer_id)-3) AS cust_number
+FROM customers;
 
 #############################
 -- Task Three: UPPER & LOWER 
@@ -83,19 +89,22 @@ FROM customers;
 #############################
 
 -- 3.1: Change Coursera-Guided-Projects to uppercase letters
-
+SELECT UPPER('Coursera-Guided-Projects');
 
 -- 3.2: Change Coursera-Guided-Projects to lowercase letters
-
+SELECT LOWER('COURSERA-GUIDED-PROJECTS');
 
 -- 3.3: Retrieve the details of the first employee
-
+SELECT * FROM employees
+WHERE emp_no = '10001';
 
 -- Start a transaction
 BEGIN;
 
 -- 3.4: Change the first name of the first employee to uppercase letters
-
+UPDATE employees
+SET first_name = UPPER(first_name)
+WHERE emp_no = '10001';
 
 -- Rollback to the previous step
 ROLLBACK;
@@ -107,16 +116,19 @@ ROLLBACK;
 #############################
 
 -- 4.1: Change M to Male in the gender column of the employees table
-
+SELECT first_name, last_name, gender, REPLACE(gender, 'M', 'Male') AS Emp_Gender
+FROM employees;
 
 -- 4.2: Change F to Female in the gender column of the employees table
-
+SELECT first_name, last_name, gender, REPLACE(gender, 'F', 'Female') AS Emp_Gender
+FROM employees;
 
 -- 4.3: Retrieve data from the customers table
 SELECT * FROM customers;
 
 -- 4.4: Change United States to US in the country column of the customers table
-
+SELECT customer_name, region, country, REPLACE(LOWER(country), 'united states', 'US') AS New_country
+FROM customers;
 
 #############################
 -- Task Five: TRIM, RTRIM, LTRIM
@@ -125,27 +137,28 @@ SELECT * FROM customers;
 #############################
 
 -- 5.1: Trim the word Coursera-Guided-Projects
-
+SELECT TRIM(leading ' ' FROM ' Coursera-Guided-Projects ');
 
 -- 5.2: Trim the word Coursera-Guided-Projects
-
+SELECT TRIM(trailing ' ' FROM ' Coursera-Guided-Projects ');
 
 -- 5.3: Trim the word Coursera-Guided-Projects
-
+SELECT TRIM(both ' ' FROM ' Coursera-Guided-Projects ');
 
 -- 5.4: Trim the word Coursera-Guided-Projects
-
+SELECT TRIM(' Coursera-Guided-Projects ');
 
 -- 5.5: Right trim the word Coursera-Guided-Projects
-
+SELECT RTRIM(' Coursera-Guided-Projects ');
 
 -- 5.6: Left trim the word Coursera-Guided-Projects
-
+SELECT LTRIM(' Coursera-Guided-Projects ');
 -- 5.7: Retrieve data from the customers table
 SELECT * FROM customers;
 
 -- 5.8: Remove the brackets from each customer id in the bracket_cust_id column
-
+SELECT bracket_cust_id, TRIM(bracket_cust_id, '()') AS cleaned_cust_id
+FROM customer_id;
 
 #############################
 -- Task Six: Concatenation
@@ -154,13 +167,16 @@ SELECT * FROM customers;
 #############################
 
 -- 6.1: Create a new column called Full_Name from the first_name and last_name of employees
-
+SELECT emp_no, birth_date, first_name, last_name, first_name||', '||last_name AS Full_name
+FROM employees;
 
 -- 6.2: Create a new column called Address from the city, state, and country of customers
-
+SELECT customer_name, city||', '||state||', '||country AS Address
+FROM customers;
 
 -- 6.3: Create a column called desc_age from the customers name and age
-
+SELECT customer_name, CONCAT(customer_name, ' is ', age, ' years old.') AS des_age
+FROM customers;
 
 #############################
 -- Task Seven: SUBSTRING
